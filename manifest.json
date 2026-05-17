@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "AI Engine",
+  "version": "2.7",
+  "description": "Batch generate and download images and videos via fal.ai",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://fal.run/*",
+    "https://queue.fal.run/*"
+  ]
+}
