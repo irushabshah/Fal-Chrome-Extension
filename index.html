@@ -38,11 +38,10 @@
     h2 { font-size: 24px; margin: 0; background: -webkit-linear-gradient(0deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .header img { height: 32px; width: 32px; border-radius: 4px; }
 
-    .grid-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-    .grid-container-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; max-width: 66.66%; }
-    @media (max-width: 1200px) {
-      .grid-container { grid-template-columns: 1fr; }
-      .grid-container-2col { grid-template-columns: 1fr; max-width: 100%; }
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; }
+    .grid-container-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px; margin-top: 20px; }
+    @media (max-width: 900px) {
+      .grid-container, .grid-container-2col { grid-template-columns: 1fr; }
     }
 
     .section-label {
@@ -73,6 +72,8 @@
     .asset-row { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-start; border: 1px dashed var(--border-color); padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.1); }
     .asset-col { flex: 1; }
     .row-number { font-weight: bold; font-size: 16px; color: var(--accent-purple); margin-right: 5px; padding-top: 10px; min-width: 22px; }
+
+    .slot-sublabel { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; display: block; }
 
     .primary-btn {
       width: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
@@ -108,151 +109,11 @@
     <input type="password" id="apiKey" placeholder="Enter your $FAL_KEY">
   </div>
 
-  <!-- ========== IMAGE MODELS ========== -->
   <div class="section-label">🖼️ Image Models</div>
-  <div class="grid-container">
+  <div id="imageModelsGrid" class="grid-container"></div>
 
-    <!-- ==== TEXT TO IMAGE (Nano Banana 2) ==== -->
-    <div class="group">
-      <div class="group-title">Text to Image (Nano Banana 2)</div>
-      <div class="row">
-        <div class="col"><label>Aspect Ratio</label><select id="t2iAspect"><option value="16:9" selected>16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option><option value="4:3">4:3</option><option value="3:4">3:4</option><option value="21:9">21:9</option><option value="9:21">9:21</option><option value="auto">Auto</option></select></div>
-        <div class="col"><label>Resolution</label><select id="t2iRes"><option value="2K" selected>2K</option><option value="1K">1K</option><option value="4K">4K</option><option value="0.5K">0.5K</option></select></div>
-      </div>
-
-      <details class="advanced">
-        <summary>Advanced Settings</summary>
-        <div class="advanced-content">
-          <div class="row">
-            <div class="col"><label>Format</label><select id="t2iFormat"><option value="png" selected>PNG</option><option value="jpeg">JPEG</option><option value="webp">WEBP</option></select></div>
-            <div class="col"><label>Safety</label><select id="t2iSafety"><option value="4" selected>4 (Default)</option><option value="1">1 (Strict)</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="6">6 (Loose)</option></select></div>
-          </div>
-          <div class="row">
-            <div class="col"><label>Thinking</label><select id="t2iThinking"><option value="none" selected>None</option><option value="minimal">Minimal</option><option value="high">High</option></select></div>
-            <div class="col"><label>Web Search</label><select id="t2iWeb"><option value="false" selected>Disabled</option><option value="true">Enabled</option></select></div>
-          </div>
-          <label>Seed (Optional)</label><input type="number" id="t2iSeed" placeholder="Random">
-        </div>
-      </details>
-
-      <label>Prompts (1 Image per row, up to 10)</label>
-      <div id="t2iFieldsContainer"></div>
-      <button class="primary-btn" id="btnT2i">Generate Text-to-Image</button>
-    </div>
-
-    <!-- ==== IMAGE EDITING (Nano Banana 2) ==== -->
-    <div class="group">
-      <div class="group-title">Image Editing (Nano Banana 2)</div>
-      <div class="row">
-        <div class="col"><label>Aspect Ratio</label><select id="i2iAspect"><option value="16:9" selected>16:9</option><option value="9:16">9:16</option><option value="1:1">1:1</option><option value="4:3">4:3</option><option value="3:4">3:4</option><option value="21:9">21:9</option><option value="9:21">9:21</option><option value="auto">Auto</option></select></div>
-        <div class="col"><label>Resolution</label><select id="i2iRes"><option value="2K" selected>2K</option><option value="1K">1K</option><option value="4K">4K</option><option value="0.5K">0.5K</option></select></div>
-      </div>
-
-      <details class="advanced">
-        <summary>Advanced Settings</summary>
-        <div class="advanced-content">
-          <div class="row">
-            <div class="col"><label>Format</label><select id="i2iFormat"><option value="png" selected>PNG</option><option value="jpeg">JPEG</option><option value="webp">WEBP</option></select></div>
-            <div class="col"><label>Safety</label><select id="i2iSafety"><option value="4" selected>4 (Default)</option><option value="1">1 (Strict)</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="6">6 (Loose)</option></select></div>
-          </div>
-          <div class="row">
-            <div class="col"><label>Thinking</label><select id="i2iThinking"><option value="none" selected>None</option><option value="minimal">Minimal</option><option value="high">High</option></select></div>
-            <div class="col"><label>Web Search</label><select id="i2iWeb"><option value="false" selected>Disabled</option><option value="true">Enabled</option></select></div>
-          </div>
-          <label>Seed (Optional)</label><input type="number" id="i2iSeed" placeholder="Random">
-        </div>
-      </details>
-
-      <label>Reference Images & Prompts (up to 10)</label>
-      <div id="i2iFieldsContainer"></div>
-      <button class="primary-btn" id="btnI2i">Generate Edited Images</button>
-    </div>
-
-    <!-- ==== IMAGE EDITING (GPT Image 2) ==== -->
-    <div class="group">
-      <div class="group-title">Image Editing (GPT Image 2)</div>
-      <div class="row">
-        <div class="col"><label>Image Size</label><select id="gptSize"><option value="2560x1440">2560×1440</option><option value="3840x2160" selected>3840×2160 (4K)</option><option value="1024x1024">1024×1024</option><option value="1536x1024">1536×1024</option><option value="1024x1536">1024×1536</option><option value="auto">Auto</option></select></div>
-        <div class="col"><label>Quality</label><select id="gptQuality"><option value="medium" selected>Medium</option><option value="low">Low</option><option value="high">High</option></select></div>
-      </div>
-
-      <details class="advanced">
-        <summary>Advanced Settings</summary>
-        <div class="advanced-content">
-          <div class="row">
-            <div class="col"><label>Format</label><select id="gptFormat"><option value="png" selected>PNG</option><option value="jpeg">JPEG</option><option value="webp">WEBP</option></select></div>
-          </div>
-        </div>
-      </details>
-
-      <label>Reference Images & Prompts (up to 10)</label>
-      <div id="gptFieldsContainer"></div>
-      <button class="primary-btn" id="btnGpt">Generate GPT Image 2</button>
-    </div>
-  </div>
-
-  <!-- ========== VIDEO MODELS ========== -->
   <div class="section-label">🎬 Video Models</div>
-  <div class="grid-container-2col">
-
-    <!-- ==== VIDEO (Veo 3.1 Fast) ==== -->
-    <div class="group">
-      <div class="group-title">Video Generation (Veo 3.1 Fast)</div>
-      <div class="row">
-        <div class="col"><label>Resolution</label><select id="v2vRes"><option value="1080p" selected>1080p</option><option value="720p">720p</option></select></div>
-        <div class="col"><label>Duration</label><select id="v2vDur"><option value="8s" selected>8 Seconds</option></select></div>
-      </div>
-
-      <details class="advanced">
-        <summary>Advanced Settings</summary>
-        <div class="advanced-content">
-          <div class="row">
-            <div class="col"><label>Aspect Ratio</label><select id="v2vAspect"><option value="16:9" selected>16:9</option><option value="9:16">9:16</option><option value="auto">Auto</option></select></div>
-            <div class="col"><label>Audio</label><select id="v2vAudio"><option value="false" selected>Off</option><option value="true">On</option></select></div>
-          </div>
-          <div class="row">
-            <div class="col"><label>Auto Fix</label><select id="v2vFix"><option value="true" selected>Enabled</option><option value="false">Disabled</option></select></div>
-            <div class="col"><label>Safety</label><select id="v2vSafety"><option value="4" selected>4 (Default)</option><option value="1">1 (Strict)</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="6">6 (Loose)</option></select></div>
-          </div>
-          <label>Negative Prompt</label><input type="text" id="v2vNeg" placeholder="e.g., blurry, distorted...">
-          <label>Seed (Optional)</label><input type="number" id="v2vSeed" placeholder="Random">
-        </div>
-      </details>
-
-      <label>Initial Frames & Prompts (up to 10)</label>
-      <div id="v2vFieldsContainer"></div>
-      <button class="primary-btn" id="btnV2v">Generate Videos (Fast)</button>
-    </div>
-
-    <!-- ==== VIDEO (Veo 3.1 Standard) ==== -->
-    <div class="group">
-      <div class="group-title">Video Generation (Veo 3.1)</div>
-      <div class="row">
-        <div class="col"><label>Resolution</label><select id="veoRes"><option value="1080p" selected>1080p</option><option value="720p">720p</option><option value="4k">4K</option></select></div>
-        <div class="col"><label>Duration</label><select id="veoDur"><option value="8s" selected>8s</option><option value="6s">6s</option><option value="4s">4s</option></select></div>
-      </div>
-
-      <details class="advanced">
-        <summary>Advanced Settings</summary>
-        <div class="advanced-content">
-          <div class="row">
-            <div class="col"><label>Aspect Ratio</label><select id="veoAspect"><option value="16:9" selected>16:9</option><option value="9:16">9:16</option><option value="auto">Auto</option></select></div>
-            <div class="col"><label>Audio</label><select id="veoAudio"><option value="false" selected>Off</option><option value="true">On</option></select></div>
-          </div>
-          <div class="row">
-            <div class="col"><label>Auto Fix</label><select id="veoFix"><option value="false" selected>Disabled</option><option value="true">Enabled</option></select></div>
-            <div class="col"><label>Safety</label><select id="veoSafety"><option value="4" selected>4 (Default)</option><option value="1">1 (Strict)</option><option value="2">2</option><option value="3">3</option><option value="5">5</option><option value="6">6 (Loose)</option></select></div>
-          </div>
-          <label>Negative Prompt</label><input type="text" id="veoNeg" placeholder="e.g., blurry, distorted...">
-          <label>Seed (Optional)</label><input type="number" id="veoSeed" placeholder="Random">
-        </div>
-      </details>
-
-      <label>Reference Images & Prompts (up to 10)</label>
-      <div id="veoFieldsContainer"></div>
-      <button class="primary-btn" id="btnVeo">Generate Videos (Veo 3.1)</button>
-    </div>
-  </div>
+  <div id="videoModelsGrid" class="grid-container-2col"></div>
 
   <div id="status"></div>
   <button class="success-btn" id="downloadBtn">Download Generated Assets</button>
@@ -261,7 +122,7 @@
   <div class="footer">
     <div class="footer-main">Made with &#10084;&#65039; by MM Creative Services</div>
     <div class="footer-sub">Developed by Rushab Shah. &copy; 2026. All rights reserved</div>
-    <div class="footer-version">Version <span id="appVersion">2.5</span></div>
+    <div class="footer-version">Version <span id="appVersion">2.8</span></div>
   </div>
 
   <script src="app.js"></script>
